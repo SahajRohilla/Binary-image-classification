@@ -67,7 +67,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: |
+            ghcr.io/${{ github.repository }}
+          # The action will lowercase the input automatically, 
+          # but we ensure the base name is what we expect.
           tags: |
             type=sha
             type=ref,event=branch
@@ -98,7 +101,9 @@ jobs:
 
       - name: Pull and Run Container (Mock Deployment)
         run: |
-          docker run -d --name test_api -p 8000:8000 ghcr.io/${{ env.IMAGE_NAME }}:latest
+          # Lowercase the image name for Docker compatibility
+          IMAGE_LOWER=$(echo "ghcr.io/${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
+          docker run -d --name test_api -p 8000:8000 $IMAGE_LOWER:latest
           # Wait for startup
           sleep 10
 
