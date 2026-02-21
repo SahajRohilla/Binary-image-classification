@@ -1,0 +1,7 @@
+# DVC configuration
+[core]
+    analytics = false
+    autostage = true
+
+[cache]
+    type = hardlink,symlink,copy
