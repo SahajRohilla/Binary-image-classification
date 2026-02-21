@@ -48,13 +48,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create dummy model for build
+      - name: Set up Python for build script
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Create valid dummy model for build
         run: |
           mkdir -p models
-          # Create a dummy file so the COPY instruction in Dockerfile doesn't fail.
-          # In a real production scenario, you would pull the actual model from 
-          # DVC or an S3 bucket here.
-          touch models/final_cnn_model.h5
+          # Create a real, minimal Keras model so load_model() doesn't crash
+          python -c "import tensorflow as tf; m=tf.keras.Sequential([tf.keras.layers.Input(shape=(224,224,3)), tf.keras.layers.Flatten(), tf.keras.layers.Dense(1, activation='sigmoid')]); m.save('models/final_cnn_model.h5')"
+          echo "✅ Minimal model created for build"
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
@@ -101,11 +105,16 @@ jobs:
 
       - name: Pull and Run Container (Mock Deployment)
         run: |
-          # Lowercase the image name for Docker compatibility
           IMAGE_LOWER=$(echo "ghcr.io/${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
           docker run -d --name test_api -p 8000:8000 $IMAGE_LOWER:latest
-          # Wait for startup
-          sleep 10
+          
+          # Give TensorFlow enough time to load the model
+          echo "Waiting for API to start..."
+          sleep 20
+          
+          echo "--- Container Logs ---"
+          docker logs test_api
+          echo "----------------------"
 
       - name: Run Smoke Tests
         run: |
@@ -115,7 +124,10 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: docker rm -f test_api
+        run: |
+          echo "Dumping final logs before cleanup..."
+          docker logs test_api || true
+          docker rm -f test_api
       
       - name: 🚀 Deployment Update (Production Simulation)
         run: |
