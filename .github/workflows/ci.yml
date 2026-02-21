@@ -25,8 +25,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest numpy Pillow tensorflow-cpu fastapi python-multipart
-          # Note: tensorflow-cpu is installed for faster installation in CI
+          # Install from requirements.txt to ensure all needed modules (like PyYAML) are present
+          pip install -r requirements.txt
+          # If TensorFlow is too heavy for CI, you could swap it for tensorflow-cpu here
+          # but for a standard CNN, the requirements.txt is the safest source of truth.
 
       - name: Run unit tests
         run: |
