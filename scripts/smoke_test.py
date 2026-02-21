@@ -22,17 +22,26 @@ def run_smoke_tests():
         sys.exit(1)
 
     # 2. Check Prediction Endpoint
-    # We'll use a local test image from our processed data if available
+    # If real data isn't there (CI), create a tiny dummy image
     test_img_path = Path("data/processed/test/cat")
+    temp_img_created = False
+    
     if not test_img_path.exists():
-        print("⚠️ Test data not found, skipping prediction smoke test...")
-        return
+        print("⚠️ Test data not found, creating a temporary dummy image for test...")
+        from PIL import Image
+        import numpy as np
+        test_img_path.mkdir(parents=True, exist_ok=True)
+        img = Image.fromarray(np.random.randint(0, 255, (224, 224, 3), dtype=np.uint8))
+        test_img_path = test_img_path / "ci_dummy.jpg"
+        img.save(test_img_path)
+        temp_img_created = True
+    else:
+        test_img_path = next(test_img_path.glob("*.jpg"))
 
-    sample_img = next(test_img_path.glob("*.jpg"))
-    print(f"📸 Testing prediction with: {sample_img}")
+    print(f"📸 Testing prediction with: {test_img_path}")
     
     try:
-        with open(sample_img, "rb") as f:
+        with open(test_img_path, "rb") as f:
             files = {"file": f}
             pred_resp = requests.post(f"{BASE_URL}/predict", files=files, timeout=15)
         
