@@ -15,7 +15,7 @@ model:
   dense_units: 128
 
 training:
-  epochs: 15
+  epochs: 20
   learning_rate: 0.001
   optimizer: adam            # options: adam, sgd
   early_stopping_patience: 5
