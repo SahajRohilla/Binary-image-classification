@@ -255,7 +255,7 @@ def train(arch: str, epochs: int):
             optimizer=TC["optimizer"],
         )
 
-        checkpoint_path = MODELS_DIR / f"best_{arch}.h5"
+        checkpoint_path = MODELS_DIR / f"best_{arch}.keras"
         callbacks       = make_callbacks(checkpoint_path)
 
         # ── Train ──
@@ -308,8 +308,8 @@ def train(arch: str, epochs: int):
         mlflow.log_artifact(str(acc_path),    artifact_path="plots")
         mlflow.log_artifact(str(cm_path),     artifact_path="plots")
 
-        # Save best model (already written by ModelCheckpoint)
-        final_model_path = MODELS_DIR / f"final_{arch}_model.h5"
+        # Save best model
+        final_model_path = MODELS_DIR / f"final_{arch}_model.keras"
         model.save(str(final_model_path))
         mlflow.log_artifact(str(final_model_path), artifact_path="model")
 

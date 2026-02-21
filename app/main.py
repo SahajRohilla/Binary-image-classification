@@ -52,7 +52,7 @@ async def log_requests(request: Request, call_next):
     return response
 
 # Constants
-MODEL_PATH = os.getenv("MODEL_PATH", "models/final_cnn_model.h5")
+MODEL_PATH = os.getenv("MODEL_PATH", "models/final_cnn_model.keras")
 IMAGE_SIZE = 224
 
 # --- Endpoints ---

@@ -28,7 +28,7 @@ COPY models/ ./models/
 EXPOSE 8000
 
 # Set environment variables
-ENV MODEL_PATH="models/final_cnn_model.h5"
+ENV MODEL_PATH="models/final_cnn_model.keras"
 ENV PYTHONUNBUFFERED=1
 
 # Command to run the application

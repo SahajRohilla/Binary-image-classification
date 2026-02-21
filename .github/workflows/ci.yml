@@ -59,7 +59,7 @@ jobs:
           # Use 2.15.0 to match the app's requirements.txt (avoiding Keras 3 issues)
           pip install tensorflow-cpu==2.15.0
           # Create a real, minimal Keras model so load_model() doesn't crash
-          python -c "import tensorflow as tf; m=tf.keras.Sequential([tf.keras.layers.Input(shape=(224,224,3)), tf.keras.layers.Flatten(), tf.keras.layers.Dense(1, activation='sigmoid')]); m.save('models/final_cnn_model.h5')"
+          python -c "import tensorflow as tf; m=tf.keras.Sequential([tf.keras.layers.Input(shape=(224,224,3)), tf.keras.layers.Flatten(), tf.keras.layers.Dense(1, activation='sigmoid')]); m.save('models/final_cnn_model.keras')"
           echo "✅ Minimal model created for build"
 
       - name: Log in to the Container registry

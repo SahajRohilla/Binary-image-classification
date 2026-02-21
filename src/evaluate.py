@@ -150,8 +150,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate Cats vs Dogs model")
     parser.add_argument(
         "--model",
-        default=str(ROOT / "models" / "final_cnn_model.h5"),
-        help="Path to saved .h5 model",
+        default=str(ROOT / "models" / "final_cnn_model.keras"),
+        help="Path to saved .keras model",
     )
     args = parser.parse_args()
     evaluate(Path(args.model))
