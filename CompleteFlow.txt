@@ -1,0 +1,50 @@
+#Environment Setup- Already done
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+#Installing Requirement dependancy
+pip install -r requirements.txt      
+
+Step 1: 
+#Launch MLflow UI:
+mlflow ui --backend-store-uri ./mlruns
+
+#Check DVC Status
+dvc status
+dvc dag
+
+
+Step 2: 
+The "Code Change" (Triggering CI/CD)
+Modify a Hyperparameter: (Manually open params.yaml and change epochs from 15 to 20 or change dropout_rate).
+
+Commit and Push to GitHub:
+git add params.yaml
+git commit -m "chore: update hyperparameters for M5 final submission"
+git push origin main
+
+
+Step 3: 
+Local Deployment (Packaging)
+Build & Run with Docker Compose:
+	docker-compose up -d --build
+	
+Verify the Container is Running:
+	docker ps
+	
+Step 4: 
+Live Prediction & Monitoring
+Test Health Endpoint:
+	curl http://localhost:8000/health
+Test Prediction Endpoint (using a real image):
+	python scripts/smoke_test.py
+Action: This will print "Found dog" or "Found cat" in your terminal.
+Check Live Monitoring Metrics:
+	curl http://localhost:8000/metrics
+Action: Show the total_requests and predictions_served counts.
+
+Step 5: 
+Post-Deployment Performance Tracking
+	python scripts/live_monitoring.py
+JSON Report:
+	cat reports/production_monitoring.json
