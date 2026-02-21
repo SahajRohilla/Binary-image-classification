@@ -22,3 +22,4 @@ opencv-python>=4.9.0
 pyyaml>=6.0.1
 pytest>=8.1.1
 requests>=2.31.0
+tf-keras>=2.16.0
