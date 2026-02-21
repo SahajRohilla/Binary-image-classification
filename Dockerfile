@@ -4,9 +4,10 @@ FROM python:3.10-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies for OpenCV and other libs
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
+# Install system dependencies for OpenCV
+# We use libgl1 and libosmesa6 to provide the necessary OpenGL support for OpenCV
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    libgl1 \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
