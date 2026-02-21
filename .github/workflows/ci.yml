@@ -48,6 +48,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Create dummy model for build
+        run: |
+          mkdir -p models
+          # Create a dummy file so the COPY instruction in Dockerfile doesn't fail.
+          # In a real production scenario, you would pull the actual model from 
+          # DVC or an S3 bucket here.
+          touch models/final_cnn_model.h5
+
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
