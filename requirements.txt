@@ -20,3 +20,5 @@ seaborn==0.13.0
 tqdm==4.66.1
 opencv-python==4.8.1.78
 pyyaml==6.0.1
+pytest==7.4.3
+requests==2.31.0
